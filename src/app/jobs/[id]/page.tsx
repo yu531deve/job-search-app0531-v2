@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { supabase } from "../../../lib/supabaseClient";
 
-const JobDetailPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const JobDetailPage = async (props: any) => {
+  const { id } = props.params;
 
   const { data, error } = await supabase
     .from("jobs")
