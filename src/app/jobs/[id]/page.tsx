@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { supabase } from "../../../lib/supabaseClient";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const JobDetailPage = async (props: any) => {
   const { id } = props.params;
 
-  const { data, error } = await supabase
-    .from("jobs")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs/${id}`,
+    {
+      cache: "no-store",
+    }
+  );
 
-  if (error || !data) {
+  if (!res.ok) {
     return (
       <div className="p-4">
         <h1 className="text-2xl font-bold">求人情報が見つかりません。</h1>
@@ -25,6 +25,8 @@ const JobDetailPage = async (props: any) => {
       </div>
     );
   }
+
+  const data = await res.json();
 
   return (
     <div className="p-6 max-w-2xl mx-auto border rounded-lg shadow bg-white">

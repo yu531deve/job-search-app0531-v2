@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabaseClient";
 
 export default function PostJobPage() {
   const router = useRouter();
@@ -38,10 +37,18 @@ export default function PostJobPage() {
       is_favorite: formData.isFavorite,
     };
 
-    const { error } = await supabase.from("jobs").insert([newJob]);
+    // 👇 このように修正
+    const res = await fetch("/api/jobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newJob),
+    });
 
-    if (error) {
-      console.error("投稿エラー:", error.message);
+    if (!res.ok) {
+      const error = await res.json();
+      console.error("投稿エラー:", error);
       alert("投稿に失敗しました");
     } else {
       alert("投稿が完了しました");

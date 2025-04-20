@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { supabase } from "../../lib/supabaseClient";
 
 type Job = {
   id: number;
@@ -20,12 +19,9 @@ export default function JobListPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const fetchJobs = async () => {
-    const { data, error } = await supabase.from("jobs").select("*");
-    if (error) {
-      console.error("求人取得エラー:", error.message);
-    } else {
-      setJobs(data as Job[]);
-    }
+    const res = await fetch("/api/jobs");
+    const data = await res.json();
+    setJobs(data);
   };
 
   useEffect(() => {
@@ -33,13 +29,16 @@ export default function JobListPage() {
   }, []);
 
   const toggleFavorite = async (id: number, isFavorite: boolean) => {
-    const { error } = await supabase
-      .from("jobs")
-      .update({ is_favorite: !isFavorite })
-      .eq("id", id);
+    const res = await fetch(`/api/jobs/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ is_favorite: !isFavorite }),
+    });
 
-    if (error) {
-      console.error("お気に入り更新エラー:", error.message);
+    if (!res.ok) {
+      console.error("お気に入り更新エラー");
     } else {
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
@@ -50,15 +49,14 @@ export default function JobListPage() {
   };
 
   const removeNonFavorites = async () => {
-    const { error } = await supabase
-      .from("jobs")
-      .delete()
-      .eq("is_favorite", false);
+    const res = await fetch("/api/jobs", {
+      method: "DELETE",
+    });
 
-    if (error) {
-      console.error("削除エラー:", error.message);
+    if (!res.ok) {
+      console.error("削除エラー");
     } else {
-      await fetchJobs(); // 削除後に再取得
+      await fetchJobs();
     }
   };
 
