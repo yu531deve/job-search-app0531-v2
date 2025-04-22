@@ -1,14 +1,16 @@
 import { supabase } from "@/lib/supabaseClient";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
   const { data, error } = await supabase
     .from("jobs")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !data) {
