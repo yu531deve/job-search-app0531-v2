@@ -21,6 +21,9 @@ export default function JobListPage() {
   const fetchJobs = async () => {
     const res = await fetch("/api/jobs");
     const data = await res.json();
+
+    console.log("🔍 APIからのデータ:", data);
+
     setJobs(data);
   };
 
