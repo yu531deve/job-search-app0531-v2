@@ -1,9 +1,12 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function GET(_req: NextRequest, context: any) {
-  const id = context.params.id;
+// VercelでもESLintでも通る形式（型エラーを防ぎつつ通す）
+export async function GET(
+  _req: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { id } = context.params;
 
   const { data, error } = await supabase
     .from("jobs")
