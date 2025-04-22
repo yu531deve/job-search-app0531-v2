@@ -3,9 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string | string[]> }
 ) {
-  const { id } = context.params;
+  const id = Array.isArray(context.params.id)
+    ? context.params.id[0]
+    : context.params.id;
 
   const { data, error } = await supabase
     .from("jobs")
