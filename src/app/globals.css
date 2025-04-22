@@ -2,10 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 💡 Tailwind の base レイヤーよりも強く効かせるために !important を付ける */
 html,
 body {
-  background-color: #ffffff;
-  color: #171717;
+  background-color: #ffffff !important;
+  color: #171717 !important;
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100%;
   width: 100%;
