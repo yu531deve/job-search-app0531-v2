@@ -2,12 +2,10 @@ import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextRequest,
-  context: { params: Record<string, string | string[]> }
+  _req: NextRequest,
+  { params }: { params: { id: string } } // ← この形式に戻します
 ) {
-  const id = Array.isArray(context.params.id)
-    ? context.params.id[0]
-    : context.params.id;
+  const { id } = params;
 
   const { data, error } = await supabase
     .from("jobs")
