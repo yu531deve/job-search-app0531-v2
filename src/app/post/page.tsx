@@ -10,7 +10,6 @@ export default function PostJobPage() {
     category: "",
     salary: "",
     description: "",
-    isFavorite: false,
   });
 
   const handleChange = (
@@ -34,7 +33,6 @@ export default function PostJobPage() {
       category: formData.category,
       salary: Number(formData.salary),
       description: formData.description,
-      is_favorite: formData.isFavorite,
     };
 
     // 👇 このように修正
@@ -128,20 +126,6 @@ export default function PostJobPage() {
             rows={4}
             required
           />
-        </div>
-
-        {/* お気に入り登録 */}
-        <div>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              name="isFavorite"
-              checked={formData.isFavorite}
-              onChange={handleChange}
-              className="accent-green-500"
-            />
-            お気に入り登録する
-          </label>
         </div>
 
         {/* 投稿ボタン */}

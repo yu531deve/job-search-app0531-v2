@@ -9,7 +9,6 @@ type Job = {
   category: string;
   salary: number;
   description: string;
-  is_favorite: boolean;
 };
 
 export default function JobListPage() {
@@ -29,38 +28,6 @@ export default function JobListPage() {
   useEffect(() => {
     fetchJobs();
   }, []);
-
-  const toggleFavorite = async (id: number, isFavorite: boolean) => {
-    const res = await fetch(`/api/jobs/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ is_favorite: !isFavorite }),
-    });
-
-    if (!res.ok) {
-      console.error("お気に入り更新エラー");
-    } else {
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job.id === id ? { ...job, is_favorite: !isFavorite } : job
-        )
-      );
-    }
-  };
-
-  const removeNonFavorites = async () => {
-    const res = await fetch("/api/jobs", {
-      method: "DELETE",
-    });
-
-    if (!res.ok) {
-      console.error("削除エラー");
-    } else {
-      await fetchJobs();
-    }
-  };
 
   const categories = [
     "エンジニア",
@@ -135,16 +102,6 @@ export default function JobListPage() {
             + 新しい求人を投稿
           </Link>
         </div>
-
-        {/* 削除ボタン（次ステップで実装） */}
-        <div className="mt-4 text-center">
-          <button
-            className="inline-block bg-red-500 text-white font-semibold rounded-full px-4 py-2 hover:bg-red-700 transition shadow-lg"
-            onClick={removeNonFavorites}
-          >
-            お気に入り以外を削除
-          </button>
-        </div>
       </div>
 
       {/* 求人一覧 */}
@@ -157,13 +114,6 @@ export default function JobListPage() {
                 key={job.id}
                 className="relative block border rounded-lg shadow hover:shadow-lg transition-all p-4 bg-white"
               >
-                <button
-                  onClick={() => toggleFavorite(job.id, job.is_favorite)}
-                  className="absolute top-2 right-2 text-yellow-400 text-2xl"
-                >
-                  {job.is_favorite ? "★" : "☆"}
-                </button>
-
                 <Link href={`/jobs/${job.id}`} className="block">
                   <h2 className="text-xl font-semibold mb-2">{job.title}</h2>
                   <p className="text-gray-700 mb-1">カテゴリ: {job.category}</p>
