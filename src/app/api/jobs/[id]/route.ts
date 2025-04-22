@@ -1,12 +1,11 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
-// VercelでもESLintでも通る形式（型エラーを防ぎつつ通す）
 export async function GET(
   _req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Record<string, string> } // ✅ ここだけ型指定
 ) {
-  const { id } = context.params;
+  const id = params.id;
 
   const { data, error } = await supabase
     .from("jobs")
