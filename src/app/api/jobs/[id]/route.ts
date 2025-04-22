@@ -1,11 +1,9 @@
 import { supabase } from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Record<string, string> } // ✅ ここだけ型指定
-) {
-  const id = params.id;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(_req: NextRequest, context: any) {
+  const id = context.params.id;
 
   const { data, error } = await supabase
     .from("jobs")
