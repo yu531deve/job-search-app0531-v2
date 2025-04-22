@@ -4,12 +4,9 @@ import Link from "next/link";
 const JobDetailPage = async (props: any) => {
   const { id } = props.params;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs/${id}`,
-    {
-      cache: "no-store",
-    }
-  );
+  const res = await fetch(`/api/jobs/${id}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) {
     return (
