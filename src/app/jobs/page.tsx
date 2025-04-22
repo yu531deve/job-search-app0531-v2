@@ -15,7 +15,6 @@ type Job = {
 export default function JobListPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [minSalary, setMinSalary] = useState("");
-  const [maxSalary, setMaxSalary] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const fetchJobs = async () => {
@@ -75,9 +74,7 @@ export default function JobListPage() {
   ];
 
   const filteredJobs = jobs.filter((job) => {
-    const salaryMatch =
-      (!minSalary || job.salary >= Number(minSalary)) &&
-      (!maxSalary || job.salary <= Number(maxSalary));
+    const salaryMatch = !minSalary || job.salary >= Number(minSalary);
     const categoryMatch =
       selectedCategories.length === 0 ||
       selectedCategories.includes(job.category);
@@ -116,27 +113,17 @@ export default function JobListPage() {
 
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-4 text-green-600">年収</h3>
-          <div className="flex items-center mb-2">
-            <input
-              type="number"
-              placeholder="最小"
-              value={minSalary}
-              onChange={(e) => setMinSalary(e.target.value)}
-              className="border rounded-lg px-3 py-1 w-20 text-right shadow-sm"
-              step="100"
-              min="0"
-            />
-            <span className="mx-2 text-green-500 font-semibold">～</span>
-            <input
-              type="number"
-              placeholder="最大"
-              value={maxSalary}
-              onChange={(e) => setMaxSalary(e.target.value)}
-              className="border rounded-lg px-3 py-1 w-20 text-right shadow-sm"
-              step="100"
-              min="0"
-            />
-          </div>
+          <select
+            value={minSalary}
+            onChange={(e) => setMinSalary(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 shadow-sm"
+          >
+            <option value="">指定なし</option>
+            <option value="300">300万円以上</option>
+            <option value="500">500万円以上</option>
+            <option value="700">700万円以上</option>
+            <option value="1000">1000万円以上</option>
+          </select>
         </div>
 
         {/* 投稿ボタン */}
