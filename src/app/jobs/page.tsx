@@ -135,7 +135,8 @@ export default function JobListPage() {
                   key={job.id}
                   className="relative block border rounded-xl shadow-md hover:shadow-lg transition-all p-6 bg-white"
                 >
-                  <Link href={`/jobs/${job.id}`} className="block space-y-2">
+                  <div className="block space-y-2 cursor-default select-none pointer-events-none">
+                    {/*<Link href={`/jobs/${job.id}`} className="block space-y-2">*/}
                     <h2 className="text-lg font-bold text-gray-900">
                       {job.title}
                     </h2>
@@ -145,7 +146,7 @@ export default function JobListPage() {
                     <p className="text-sm text-gray-600">
                       年収: {job.salary}万円
                     </p>
-                  </Link>
+                  </div>
                 </div>
               ))
             ) : (

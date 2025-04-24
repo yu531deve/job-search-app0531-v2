@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function PostJobPage() {
   const router = useRouter();
@@ -35,7 +36,6 @@ export default function PostJobPage() {
       description: formData.description,
     };
 
-    // 👇 このように修正
     const res = await fetch("/api/jobs", {
       method: "POST",
       headers: {
@@ -55,87 +55,108 @@ export default function PostJobPage() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto border rounded-lg shadow bg-white">
-      <h1 className="text-2xl font-bold mb-6">求人情報を投稿</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* タイトル */}
-        <div>
-          <label className="block text-gray-700 font-semibold mb-2">
-            タイトル
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full border rounded px-4 py-2"
-            required
-          />
+    <>
+      {/* ヘッダー */}
+      <header className="bg-slate-700 text-white px-6 py-4">
+        <div className="max-w-screen-xl mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold">求人検索アプリ</h1>
+          <nav className="space-x-6 text-sm">
+            <Link href="/" className="hover:underline">
+              求人検索
+            </Link>
+            <Link href="/post" className="hover:underline">
+              求人投稿
+            </Link>
+          </nav>
         </div>
+      </header>
 
-        {/* カテゴリ */}
-        <div>
-          <label className="block text-gray-700 font-semibold mb-2">
-            カテゴリ
-          </label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full border rounded px-4 py-2"
-            required
-          >
-            <option value="" disabled>
-              選択してください
-            </option>
-            <option value="エンジニア">エンジニア</option>
-            <option value="デザイン">デザイン</option>
-            <option value="マーケティング">マーケティング</option>
-            <option value="営業">営業</option>
-            <option value="人事">人事</option>
-            <option value="医療・介護">医療・介護</option>
-            <option value="カスタマーサポート">カスタマーサポート</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
+      {/* 投稿フォーム本体 */}
+      <main className="min-h-screen bg-gray-50 px-6 py-12">
+        <h1 className="text-xl font-bold text-gray-800 mb-6">求人投稿</h1>
 
-        {/* 給与 */}
-        <div>
-          <label className="block text-gray-700 font-semibold mb-2">
-            給与 (万円単位)
-          </label>
-          <input
-            type="number"
-            name="salary"
-            value={formData.salary}
-            onChange={handleChange}
-            className="w-full border rounded px-4 py-2"
-            min="0"
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-lg">
+          {/* カテゴリ */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              求人カテゴリ選択
+            </label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              required
+            >
+              <option value="" disabled>
+                カテゴリを選択
+              </option>
+              <option value="エンジニア">エンジニア</option>
+              <option value="デザイン">デザイン</option>
+              <option value="マーケティング">マーケティング</option>
+              <option value="営業">営業</option>
+              <option value="人事">人事</option>
+              <option value="医療・介護">医療・介護</option>
+              <option value="カスタマーサポート">カスタマーサポート</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
 
-        {/* 説明 */}
-        <div>
-          <label className="block text-gray-700 font-semibold mb-2">説明</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full border rounded px-4 py-2"
-            rows={4}
-            required
-          />
-        </div>
+          {/* 年収 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              年収（万円）
+            </label>
+            <input
+              type="number"
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              required
+            />
+          </div>
 
-        {/* 投稿ボタン */}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white font-semibold rounded px-4 py-2 hover:bg-blue-700 transition"
-        >
-          投稿する
-        </button>
-      </form>
-    </div>
+          {/* タイトル */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              求人タイトル
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              memo
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              rows={4}
+              required
+            />
+          </div>
+
+          {/* 投稿ボタン */}
+          <div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white font-semibold rounded px-6 py-2 text-sm hover:bg-blue-600 transition"
+            >
+              投稿
+            </button>
+          </div>
+        </form>
+      </main>
+    </>
   );
 }
