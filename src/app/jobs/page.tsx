@@ -15,6 +15,8 @@ export default function JobListPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [minSalary, setMinSalary] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
 
   const fetchJobs = async () => {
     const res = await fetch("/api/jobs");
@@ -47,6 +49,10 @@ export default function JobListPage() {
       selectedCategories.includes(job.category);
     return salaryMatch && categoryMatch;
   });
+
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
 
   return (
     <>
@@ -129,8 +135,8 @@ export default function JobListPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
+            {currentJobs.length > 0 ? (
+              currentJobs.map((job) => (
                 <div
                   key={job.id}
                   className="relative block border rounded-xl shadow-md hover:shadow-lg transition-all p-6 bg-white"
@@ -154,6 +160,23 @@ export default function JobListPage() {
                 該当する求人が見つかりません。
               </p>
             )}
+          </div>
+          <div className="mt-6 flex justify-center space-x-2">
+            {Array.from({
+              length: Math.ceil(filteredJobs.length / jobsPerPage),
+            }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 border rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-blue-600"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
           </div>
         </div>
       </div>
