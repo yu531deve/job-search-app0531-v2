@@ -24,7 +24,12 @@ export default function JobListPage() {
 
     console.log("🔍 APIからのデータ:", data);
 
-    setJobs(data);
+    if (Array.isArray(data)) {
+      setJobs(data); // 配列だったらセット
+    } else {
+      console.error("APIエラー:", data);
+      setJobs([]); // 配列じゃなかったら空配列にする（filterで落ちない）
+    }
   };
 
   useEffect(() => {

@@ -1,35 +1,32 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient"; // ← JS SDK 経由に変更！
+import { NextRequest, NextResponse } from "next/server";
+import { pool } from "@/lib/db";
 
 export async function GET() {
-  const { data, error } = await supabase.from("jobs").select("*");
-
-  if (error) {
-    console.error("Supabase取得エラー:", error);
+  try {
+    const result = await pool.query("SELECT * FROM jobs");
+    return NextResponse.json(result.rows);
+  } catch (error) {
+    console.error("❌ DB取得エラー:", error);
     return NextResponse.json({ error: "取得に失敗しました" }, { status: 500 });
   }
-
-  return NextResponse.json(data); // ← 直接配列を返す！
 }
 
-export async function POST(req: Request) {
-  const body = await req.json();
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { title, category, salary, description } = body;
 
-  const { title, category, salary, description } = body;
+    const result = await pool.query(
+      "INSERT INTO jobs (title, category, salary, description) VALUES ($1, $2, $3, $4) RETURNING *",
+      [title, category, salary, description]
+    );
 
-  const { data, error } = await supabase.from("jobs").insert([
-    {
-      title,
-      category,
-      salary,
-      description,
-    },
-  ]);
-
-  if (error) {
-    console.error("Supabase登録エラー:", error);
+    return NextResponse.json(
+      { success: true, job: result.rows[0] },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("❌ 登録エラー:", error);
     return NextResponse.json({ error: "登録に失敗しました" }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true, job: data?.[0] }, { status: 200 });
 }
