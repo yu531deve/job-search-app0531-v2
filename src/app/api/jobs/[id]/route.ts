@@ -1,3 +1,7 @@
+/*
+
+詳細ページ用
+
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 
@@ -23,3 +27,5 @@ export async function GET(
     return NextResponse.json({ error: "取得に失敗しました" }, { status: 500 });
   }
 }
+
+*/
